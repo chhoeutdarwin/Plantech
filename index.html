@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlanTech</title>
+    <link rel="icon" href="https://i.pinimg.com/736x/55/1e/94/551e94ae8845df9d455f221c07421dcd.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    
+</head>
+<body>
+    <!-- Left Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <i class="fas fa-calendar-check"></i>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="sidebar-tab" title="Dashboard">
+                <i class="fas fa-th-large"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="index.html" class="sidebar-tab active" title="Schedule">
+                <i class="fas fa-tasks"></i>
+                <span>Schedule</span>
+            </a>
+            <a href="timer.html" class="sidebar-tab" title="Timer">
+                <i class="fas fa-stopwatch"></i>
+                <span>Timer</span>
+            </a>
+            <a href="khmer_calendar.html" class="sidebar-tab" title="Khmer Calendar">
+                <i class="fas fa-moon"></i>
+                <span>ខ្មែរ</span>
+            </a>
+            <a href="world_calendar.html" class="sidebar-tab" title="World Calendar">
+                <i class="fas fa-globe"></i>
+                <span>World</span>
+            </a>
+        </nav>
+        <div class="sidebar-bottom">
+            <button id="dark-mode-toggle" class="sidebar-tab" title="Toggle theme">
+                <i class="fas fa-sun"></i>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -
+    <div class="main-wrapper">
+        <!-- Compact Header -->
+        <header class="top-bar">
+            <div class="container header-row">
+                <div class="logo">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Schedule</span>
+                </div>
+                <div class="header-stats">
+                    <span class="stat-pill"><i class="fas fa-fire"></i> <span id="streak-count">0</span>d</span>
+                    <span class="stat-pill"><i class="fas fa-tasks"></i> <span id="tasks-completed">0</span>/<span id="tasks-total">0</span></span>
+                    <span class="stat-pill clock"><i class="fas fa-clock"></i> <span id="current-time">00:00</span></span>
+                </div>
+                <div class="header-actions">
+                    <button id="menu-toggle" class="icon-btn" title="Menu"><i class="fas fa-ellipsis-v"></i></button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Nav Bar -->
+        <nav class="nav-bar">
+            <div class="container nav-row">
+                <div class="date-nav">
+                    <button id="prev-day" class="nav-btn"><i class="fas fa-chevron-left"></i></button>
+                    <span id="current-date" class="date-display" title="Click for today">Today</span>
+                    <button id="next-day" class="nav-btn"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+                <div class="view-switcher">
+                    <button class="view-btn active" data-view="day" title="Day"><i class="fas fa-calendar-day"></i></button>
+                    <button class="view-btn" data-view="week" title="Week"><i class="fas fa-calendar-week"></i></button>
+                    <button class="view-btn" data-view="month" title="Month"><i class="fas fa-calendar-alt"></i></button>
+                    <button class="view-btn" data-view="stats" title="Stats"><i class="fas fa-chart-bar"></i></button>
+                </div>
+            </div>
+        </nav>
+
+    <!-- Dropdown Menu (Hidden) -->
+    <div id="dropdown-menu" class="dropdown-menu hidden">
+        <div class="menu-section">
+            <h4>Actions</h4>
+            <button id="download-schedule" class="menu-item"><i class="fas fa-download"></i> Download Image</button>
+            <button id="download-pdf" class="menu-item"><i class="fas fa-file-pdf"></i> Download PDF</button>
+            <button id="export-json" class="menu-item"><i class="fas fa-file-export"></i> Export JSON</button>
+            <button id="import-json" class="menu-item"><i class="fas fa-file-import"></i> Import JSON</button>
+            <button id="share-schedule" class="menu-item"><i class="fas fa-share-alt"></i> Share</button>
+            <button id="shortcuts-btn" class="menu-item"><i class="fas fa-keyboard"></i> Shortcuts</button>
+            <button id="clear-schedule" class="menu-item danger"><i class="fas fa-trash-alt"></i> Clear All</button>
+        </div>
+        <div class="menu-section">
+            <h4>Theme Color</h4>
+            <div class="theme-colors">
+                <button class="color-btn active" data-theme="default" style="background: #007bff;"></button>
+                <button class="color-btn" data-theme="green" style="background: #28a745;"></button>
+                <button class="color-btn" data-theme="purple" style="background: #6f42c1;"></button>
+                <button class="color-btn" data-theme="orange" style="background: #fd7e14;"></button>
+                <button class="color-btn" data-theme="pink" style="background: #e83e8c;"></button>
+            </div>
+        </div>
+        <input type="file" id="import-file" accept=".json" style="display: none;">
+    </div>
+
+    <main>
+        <!-- Day View -->
+        <div id="day-view" class="view-content active">
+            <div id="schedule-container" class="container">
+                <!-- Time blocks will be generated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Week View -->
+        <div id="week-view" class="view-content">
+            <div class="container">
+                <div id="week-container" class="week-grid">
+                    <!-- Week view will be generated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Month View -->
+        <div id="month-view" class="view-content">
+            <div class="container">
+                <div id="month-container" class="month-grid">
+                    <!-- Month view will be generated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats View -->
+        <div id="stats-view" class="view-content">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3><i class="fas fa-chart-pie"></i> Completion Rate</h3>
+                        <div class="chart-container">
+                            <canvas id="completion-chart"></canvas>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <h3><i class="fas fa-chart-line"></i> Weekly Progress</h3>
+                        <div class="chart-container">
+                            <canvas id="weekly-chart"></canvas>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <h3><i class="fas fa-tags"></i> Time by Category</h3>
+                        <div class="chart-container">
+                            <canvas id="category-chart"></canvas>
+                        </div>
+                    </div>
+                    <div class="stat-card full-width">
+                        <h3><i class="fas fa-history"></i> Activity History</h3>
+                        <div id="activity-heatmap" class="heatmap">
+                            <!-- Heatmap will be generated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Pomodoro Timer Modal -->
+    <div id="pomodoro-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2><i class="fas fa-stopwatch"></i> Pomodoro Timer</h2>
+            <div class="timer-display">
+                <span id="timer-minutes">25</span>:<span id="timer-seconds">00</span>
+            </div>
+            <div class="timer-controls">
+                <button id="timer-start" class="timer-btn"><i class="fas fa-play"></i></button>
+                <button id="timer-pause" class="timer-btn"><i class="fas fa-pause"></i></button>
+                <button id="timer-reset" class="timer-btn"><i class="fas fa-redo"></i></button>
+            </div>
+            <div class="timer-presets">
+                <button class="preset-btn" data-minutes="25">25 min</button>
+                <button class="preset-btn" data-minutes="15">15 min</button>
+                <button class="preset-btn" data-minutes="5">5 min</button>
+                <button class="preset-btn" data-minutes="45">45 min</button>
+            </div>
+            <p id="timer-task">No task selected</p>
+        </div>
+    </div>
+
+    <!-- Task Details Modal -->
+    <div id="task-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2><i class="fas fa-edit"></i> Task Details</h2>
+            <input type="hidden" id="modal-hour">
+            <div class="form-group">
+                <label>Task Name</label>
+                <input type="text" id="modal-task-name" placeholder="Enter task name">
+            </div>
+            <div class="form-group">
+                <label>Category</label>
+                <select id="modal-category">
+                    <option value="none">📋 None</option>
+                    <option value="work">💼 Work</option>
+                    <option value="personal">👤 Personal</option>
+                    <option value="health">💪 Health</option>
+                    <option value="learning">📚 Learning</option>
+                    <option value="social">👥 Social</option>
+                    <option value="errands">🛒 Errands</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Priority</label>
+                <select id="modal-priority">
+                    <option value="low">🟢 Low</option>
+                    <option value="medium">🟡 Medium</option>
+                    <option value="high">🔴 High</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Duration (hours)</label>
+                <select id="modal-duration">
+                    <option value="1">1 hour</option>
+                    <option value="2">2 hours</option>
+                    <option value="3">3 hours</option>
+                    <option value="4">4 hours</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Notes</label>
+                <textarea id="modal-notes" placeholder="Add notes or description..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="modal-recurring"> Recurring Task
+                </label>
+                <select id="modal-recurrence" disabled>
+                    <option value="daily">Daily</option>
+                    <option value="weekdays">Weekdays</option>
+                    <option value="weekly">Weekly</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="modal-notification"> Enable Notification
+                </label>
+                <select id="modal-notify-before">
+                    <option value="0">At start time</option>
+                    <option value="5">5 minutes before</option>
+                    <option value="10">10 minutes before</option>
+                    <option value="15">15 minutes before</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button id="modal-save" class="control-btn"><i class="fas fa-save"></i> Save</button>
+                <button id="modal-delete" class="control-btn danger"><i class="fas fa-trash"></i> Delete</button>
+                <button id="modal-pomodoro" class="control-btn"><i class="fas fa-stopwatch"></i> Start Timer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Permission Banner -->
+    <div id="notification-banner" class="notification-banner hidden">
+        <p><i class="fas fa-bell"></i> Enable notifications to get reminders for your tasks!</p>
+        <button id="enable-notifications" class="control-btn small">Enable</button>
+        <button id="dismiss-banner" class="control-btn small">Dismiss</button>
+    </div>
+
+    <!-- Keyboard Shortcuts Help -->
+    <div id="shortcuts-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2><i class="fas fa-keyboard"></i> Keyboard Shortcuts</h2>
+            <div class="shortcuts-list">
+                <div class="shortcut-item"><kbd>N</kbd> New task in current hour</div>
+                <div class="shortcut-item"><kbd>T</kbd> Go to today</div>
+                <div class="shortcut-item"><kbd>←</kbd> Previous day</div>
+                <div class="shortcut-item"><kbd>→</kbd> Next day</div>
+                <div class="shortcut-item"><kbd>D</kbd> Day view</div>
+                <div class="shortcut-item"><kbd>W</kbd> Week view</div>
+                <div class="shortcut-item"><kbd>M</kbd> Month view</div>
+                <div class="shortcut-item"><kbd>S</kbd> Stats view</div>
+                <div class="shortcut-item"><kbd>P</kbd> Open Pomodoro timer</div>
+                <div class="shortcut-item"><kbd>Ctrl+S</kbd> Save all tasks</div>
+                <div class="shortcut-item"><kbd>Ctrl+E</kbd> Export schedule</div>
+                <div class="shortcut-item"><kbd>?</kbd> Show shortcuts</div>
+                <div class="shortcut-item"><kbd>Esc</kbd> Close modals</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container"></div>
+
+    <footer>
+        <div class="container">
+            <p id="quote-text">"The secret of getting ahead is getting started."</p>
+            <p>&copy; 2026 Daily Schedule Optimizer. Created by GitHub Copilot.</p>
+            <p class="footer-hint">Press <kbd>?</kbd> for keyboard shortcuts</p>
+        </div>
+    </footer>
+    </div><!-- End main-wrapper -->
+
+    <!-- Chart.js for statistics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- html2canvas for image export -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timer - UR-Schedule</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Timer Page Styles */
+        .timer-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 100px);
+            padding: 24px;
+        }
+
+        .timer-card {
+            background: var(--card-bg-color);
+            border-radius: var(--radius-lg);
+            padding: 48px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .timer-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 32px;
+            background: var(--bg-color);
+            padding: 6px;
+            border-radius: var(--radius-md);
+        }
+
+        .timer-tab {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            background: transparent;
+            color: var(--accent-color);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s ease;
+        }
+
+        .timer-tab.active {
+            background: var(--card-bg-color);
+            color: var(--primary-color);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .timer-tab:hover:not(.active) {
+            color: var(--text-color);
+        }
+
+        .timer-display {
+            font-size: 5rem;
+            font-weight: 700;
+            color: var(--text-color);
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+            margin-bottom: 16px;
+            letter-spacing: -2px;
+        }
+
+        .timer-label {
+            font-size: 0.9rem;
+            color: var(--accent-color);
+            margin-bottom: 32px;
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+
+        .timer-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .timer-btn.primary {
+            background: var(--primary-color);
+            color: white;
+            width: 80px;
+            height: 80px;
+            font-size: 1.5rem;
+        }
+
+        .timer-btn.primary:hover {
+            background: var(--primary-hover);
+            transform: scale(1.05);
+        }
+
+        .timer-btn.secondary {
+            background: var(--bg-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .timer-btn.secondary:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .timer-btn.danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+        }
+
+        .timer-btn.danger:hover {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        /* Pomodoro Settings */
+        .pomodoro-settings {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .setting-item {
+            text-align: center;
+        }
+
+        .setting-label {
+            font-size: 0.75rem;
+            color: var(--accent-color);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .setting-value {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .setting-value button {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+            background: var(--bg-color);
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .setting-value button:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .setting-value span {
+            font-size: 1.1rem;
+            font-weight: 600;
+            min-width: 40px;
+            color: var(--text-color);
+        }
+
+        /* Session Counter */
+        .session-counter {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        .session-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--border-color);
+            transition: all 0.2s ease;
+        }
+
+        .session-dot.completed {
+            background: var(--success-color);
+        }
+
+        .session-dot.current {
+            background: var(--primary-color);
+            box-shadow: 0 0 0 4px var(--current-highlight);
+        }
+
+        /* Stopwatch Laps */
+        .laps-container {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 24px;
+            text-align: left;
+        }
+
+        .lap-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+
+        .lap-item:last-child {
+            border-bottom: none;
+        }
+
+        .lap-number {
+            color: var(--accent-color);
+        }
+
+        .lap-time {
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .lap-diff {
+            color: var(--primary-color);
+            font-size: 0.8rem;
+        }
+
+        /* Progress Ring */
+        .progress-ring-container {
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring circle {
+            fill: none;
+            stroke-width: 8;
+        }
+
+        .progress-ring .bg {
+            stroke: var(--border-color);
+        }
+
+        .progress-ring .progress {
+            stroke: var(--primary-color);
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.3s ease;
+        }
+
+        .timer-display-wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Hidden */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .page-header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .page-header h1 i {
+            color: var(--primary-color);
+        }
+
+        .page-header p {
+            color: var(--accent-color);
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <i class="fas fa-calendar-check"></i>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="sidebar-tab" title="Dashboard">
+                <i class="fas fa-th-large"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="index.html" class="sidebar-tab" title="Schedule">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Schedule</span>
+            </a>
+            <a href="timer.html" class="sidebar-tab active" title="Timer">
+                <i class="fas fa-stopwatch"></i>
+                <span>Timer</span>
+            </a>
+            <a href="khmer_calendar.html" class="sidebar-tab" title="Khmer Calendar">
+                <i class="fas fa-moon"></i>
+                <span>Khmer</span>
+            </a>
+            <a href="world_calendar.html" class="sidebar-tab" title="World Calendar">
+                <i class="fas fa-globe-americas"></i>
+                <span>World</span>
+            </a>
+        </nav>
+        <div class="sidebar-bottom">
+            <button class="sidebar-tab theme-toggle" title="Toggle Theme" onclick="toggleTheme()">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-wrapper">
+        <div class="timer-container">
+            <div class="page-header">
+                <h1><i class="fas fa-stopwatch"></i> Timer</h1>
+                <p>Focus, track, and boost your productivity</p>
+            </div>
+
+            <div class="timer-card">
+                <!-- Timer Mode Tabs -->
+                <div class="timer-tabs">
+                    <button class="timer-tab active" data-mode="pomodoro">Pomodoro</button>
+                    <button class="timer-tab" data-mode="stopwatch">Stopwatch</button>
+                    <button class="timer-tab" data-mode="countdown">Countdown</button>
+                </div>
+
+                <!-- Pomodoro Timer -->
+                <div id="pomodoro-mode">
+                    <div class="progress-ring-container">
+                        <svg class="progress-ring" width="220" height="220">
+                            <circle class="bg" cx="110" cy="110" r="100"></circle>
+                            <circle class="progress" id="pomodoro-progress" cx="110" cy="110" r="100" 
+                                stroke-dasharray="628" stroke-dashoffset="0"></circle>
+                        </svg>
+                        <div class="timer-display-wrapper">
+                            <div class="timer-display" id="pomodoro-display">25:00</div>
+                            <div class="timer-label" id="pomodoro-label">Focus Time</div>
+                        </div>
+                    </div>
+
+                    <div class="pomodoro-settings">
+                        <div class="setting-item">
+                            <div class="setting-label">Focus</div>
+                            <div class="setting-value">
+                                <button onclick="adjustSetting('focus', -5)">−</button>
+                                <span id="focus-minutes">25</span>
+                                <button onclick="adjustSetting('focus', 5)">+</button>
+                            </div>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-label">Short Break</div>
+                            <div class="setting-value">
+                                <button onclick="adjustSetting('shortBreak', -1)">−</button>
+                                <span id="short-break-minutes">5</span>
+                                <button onclick="adjustSetting('shortBreak', 1)">+</button>
+                            </div>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-label">Long Break</div>
+                            <div class="setting-value">
+                                <button onclick="adjustSetting('longBreak', -5)">−</button>
+                                <span id="long-break-minutes">15</span>
+                                <button onclick="adjustSetting('longBreak', 5)">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timer-controls">
+                        <button class="timer-btn secondary" onclick="resetPomodoro()" title="Reset">
+                            <i class="fas fa-redo"></i>
+                        </button>
+                        <button class="timer-btn primary" id="pomodoro-start" onclick="togglePomodoro()">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <button class="timer-btn secondary" onclick="skipPomodoro()" title="Skip">
+                            <i class="fas fa-forward"></i>
+                        </button>
+                    </div>
+
+                    <div class="session-counter" id="session-counter">
+                        <div class="session-dot current"></div>
+                        <div class="session-dot"></div>
+                        <div class="session-dot"></div>
+                        <div class="session-dot"></div>
+                    </div>
+                </div>
+
+                <!-- Stopwatch -->
+                <div id="stopwatch-mode" class="hidden">
+                    <div class="timer-display" id="stopwatch-display">00:00:00</div>
+                    <div class="timer-label">Stopwatch</div>
+
+                    <div class="timer-controls">
+                        <button class="timer-btn secondary" id="stopwatch-lap" onclick="lapStopwatch()" title="Lap">
+                            <i class="fas fa-flag"></i>
+                        </button>
+                        <button class="timer-btn primary" id="stopwatch-start" onclick="toggleStopwatch()">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <button class="timer-btn danger" onclick="resetStopwatch()" title="Reset">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+
+                    <div class="laps-container" id="laps-container"></div>
+                </div>
+
+                <!-- Countdown Timer -->
+                <div id="countdown-mode" class="hidden">
+                    <div class="timer-display" id="countdown-display">00:00</div>
+                    <div class="timer-label" id="countdown-label">Set your timer</div>
+
+                    <div class="pomodoro-settings" id="countdown-settings">
+                        <div class="setting-item">
+                            <div class="setting-label">Hours</div>
+                            <div class="setting-value">
+                                <button onclick="adjustCountdown('hours', -1)">−</button>
+                                <span id="countdown-hours">0</span>
+                                <button onclick="adjustCountdown('hours', 1)">+</button>
+                            </div>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-label">Minutes</div>
+                            <div class="setting-value">
+                                <button onclick="adjustCountdown('minutes', -5)">−</button>
+                                <span id="countdown-minutes">5</span>
+                                <button onclick="adjustCountdown('minutes', 5)">+</button>
+                            </div>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-label">Seconds</div>
+                            <div class="setting-value">
+                                <button onclick="adjustCountdown('seconds', -10)">−</button>
+                                <span id="countdown-seconds">0</span>
+                                <button onclick="adjustCountdown('seconds', 10)">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timer-controls">
+                        <button class="timer-btn secondary" onclick="resetCountdown()" title="Reset">
+                            <i class="fas fa-redo"></i>
+                        </button>
+                        <button class="timer-btn primary" id="countdown-start" onclick="toggleCountdown()">
+                            <i class="fas fa-play"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme handling
+        function toggleTheme() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const icon = document.querySelector('.theme-toggle i');
+            if (isDark) {
+                document.documentElement.removeAttribute('data-theme');
+                icon.classList.replace('fa-sun', 'fa-moon');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                icon.classList.replace('fa-moon', 'fa-sun');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Load saved theme
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.querySelector('.theme-toggle i').classList.replace('fa-moon', 'fa-sun');
+        }
+
+        // Tab switching
+        const tabs = document.querySelectorAll('.timer-tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                const mode = tab.dataset.mode;
+                document.getElementById('pomodoro-mode').classList.toggle('hidden', mode !== 'pomodoro');
+                document.getElementById('stopwatch-mode').classList.toggle('hidden', mode !== 'stopwatch');
+                document.getElementById('countdown-mode').classList.toggle('hidden', mode !== 'countdown');
+            });
+        });
+
+        // ==================== POMODORO ====================
+        let pomodoroSettings = {
+            focus: 25,
+            shortBreak: 5,
+            longBreak: 15
+        };
+        let pomodoroState = 'focus'; // focus, shortBreak, longBreak
+        let pomodoroTime = pomodoroSettings.focus * 60;
+        let pomodoroRunning = false;
+        let pomodoroInterval = null;
+        let pomodoroSession = 1;
+        let totalPomodoroTime = pomodoroTime;
+
+        function adjustSetting(type, delta) {
+            pomodoroSettings[type] = Math.max(1, pomodoroSettings[type] + delta);
+            document.getElementById(`${type === 'focus' ? 'focus' : type === 'shortBreak' ? 'short-break' : 'long-break'}-minutes`).textContent = pomodoroSettings[type];
+            if (!pomodoroRunning && pomodoroState === type) {
+                pomodoroTime = pomodoroSettings[type] * 60;
+                totalPomodoroTime = pomodoroTime;
+                updatePomodoroDisplay();
+            }
+            if (!pomodoroRunning && type === 'focus' && pomodoroState === 'focus') {
+                pomodoroTime = pomodoroSettings.focus * 60;
+                totalPomodoroTime = pomodoroTime;
+                updatePomodoroDisplay();
+            }
+        }
+
+        function updatePomodoroDisplay() {
+            const minutes = Math.floor(pomodoroTime / 60);
+            const seconds = pomodoroTime % 60;
+            document.getElementById('pomodoro-display').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Update progress ring
+            const progress = (totalPomodoroTime - pomodoroTime) / totalPomodoroTime;
+            const circumference = 628;
+            document.getElementById('pomodoro-progress').style.strokeDashoffset = circumference * (1 - progress);
+        }
+
+        function togglePomodoro() {
+            pomodoroRunning = !pomodoroRunning;
+            const btn = document.getElementById('pomodoro-start');
+            btn.innerHTML = pomodoroRunning ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>';
+            
+            if (pomodoroRunning) {
+                pomodoroInterval = setInterval(() => {
+                    pomodoroTime--;
+                    updatePomodoroDisplay();
+                    if (pomodoroTime <= 0) {
+                        pomodoroComplete();
+                    }
+                }, 1000);
+            } else {
+                clearInterval(pomodoroInterval);
+            }
+        }
+
+        function pomodoroComplete() {
+            clearInterval(pomodoroInterval);
+            pomodoroRunning = false;
+            document.getElementById('pomodoro-start').innerHTML = '<i class="fas fa-play"></i>';
+            
+            // Play notification sound
+            playNotification();
+            
+            if (pomodoroState === 'focus') {
+                updateSessionDots();
+                if (pomodoroSession % 4 === 0) {
+                    pomodoroState = 'longBreak';
+                    pomodoroTime = pomodoroSettings.longBreak * 60;
+                    document.getElementById('pomodoro-label').textContent = 'Long Break';
+                } else {
+                    pomodoroState = 'shortBreak';
+                    pomodoroTime = pomodoroSettings.shortBreak * 60;
+                    document.getElementById('pomodoro-label').textContent = 'Short Break';
+                }
+            } else {
+                pomodoroState = 'focus';
+                pomodoroTime = pomodoroSettings.focus * 60;
+                document.getElementById('pomodoro-label').textContent = 'Focus Time';
+                if (pomodoroSession < 4) pomodoroSession++;
+                else pomodoroSession = 1;
+                updateSessionDotsNext();
+            }
+            totalPomodoroTime = pomodoroTime;
+            updatePomodoroDisplay();
+        }
+
+        function updateSessionDots() {
+            const dots = document.querySelectorAll('.session-dot');
+            dots[pomodoroSession - 1].classList.add('completed');
+            dots[pomodoroSession - 1].classList.remove('current');
+        }
+
+        function updateSessionDotsNext() {
+            const dots = document.querySelectorAll('.session-dot');
+            dots.forEach((dot, i) => {
+                dot.classList.remove('current');
+                if (i < pomodoroSession - 1) dot.classList.add('completed');
+            });
+            dots[pomodoroSession - 1].classList.add('current');
+        }
+
+        function resetPomodoro() {
+            clearInterval(pomodoroInterval);
+            pomodoroRunning = false;
+            pomodoroState = 'focus';
+            pomodoroTime = pomodoroSettings.focus * 60;
+            totalPomodoroTime = pomodoroTime;
+            pomodoroSession = 1;
+            document.getElementById('pomodoro-start').innerHTML = '<i class="fas fa-play"></i>';
+            document.getElementById('pomodoro-label').textContent = 'Focus Time';
+            updatePomodoroDisplay();
+            
+            const dots = document.querySelectorAll('.session-dot');
+            dots.forEach((dot, i) => {
+                dot.classList.remove('completed', 'current');
+                if (i === 0) dot.classList.add('current');
+            });
+        }
+
+        function skipPomodoro() {
+            pomodoroTime = 0;
+            pomodoroComplete();
+        }
+
+        // ==================== STOPWATCH ====================
+        let stopwatchTime = 0;
+        let stopwatchRunning = false;
+        let stopwatchInterval = null;
+        let laps = [];
+
+        function updateStopwatchDisplay() {
+            const hours = Math.floor(stopwatchTime / 3600);
+            const minutes = Math.floor((stopwatchTime % 3600) / 60);
+            const seconds = stopwatchTime % 60;
+            document.getElementById('stopwatch-display').textContent = 
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function toggleStopwatch() {
+            stopwatchRunning = !stopwatchRunning;
+            const btn = document.getElementById('stopwatch-start');
+            btn.innerHTML = stopwatchRunning ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>';
+            
+            if (stopwatchRunning) {
+                stopwatchInterval = setInterval(() => {
+                    stopwatchTime++;
+                    updateStopwatchDisplay();
+                }, 1000);
+            } else {
+                clearInterval(stopwatchInterval);
+            }
+        }
+
+        function lapStopwatch() {
+            if (stopwatchTime > 0) {
+                const lastLapTime = laps.length > 0 ? laps[laps.length - 1].total : 0;
+                laps.push({ total: stopwatchTime, diff: stopwatchTime - lastLapTime });
+                renderLaps();
+            }
+        }
+
+        function renderLaps() {
+            const container = document.getElementById('laps-container');
+            container.innerHTML = laps.map((lap, i) => {
+                const formatTime = (t) => {
+                    const h = Math.floor(t / 3600);
+                    const m = Math.floor((t % 3600) / 60);
+                    const s = t % 60;
+                    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+                };
+                return `
+                    <div class="lap-item">
+                        <span class="lap-number">Lap ${i + 1}</span>
+                        <span class="lap-diff">+${formatTime(lap.diff)}</span>
+                        <span class="lap-time">${formatTime(lap.total)}</span>
+                    </div>
+                `;
+            }).reverse().join('');
+        }
+
+        function resetStopwatch() {
+            clearInterval(stopwatchInterval);
+            stopwatchRunning = false;
+            stopwatchTime = 0;
+            laps = [];
+            document.getElementById('stopwatch-start').innerHTML = '<i class="fas fa-play"></i>';
+            updateStopwatchDisplay();
+            document.getElementById('laps-container').innerHTML = '';
+        }
+
+        // ==================== COUNTDOWN ====================
+        let countdownSettings = { hours: 0, minutes: 5, seconds: 0 };
+        let countdownTime = 300;
+        let countdownRunning = false;
+        let countdownInterval = null;
+
+        function adjustCountdown(type, delta) {
+            const max = type === 'hours' ? 23 : 59;
+            countdownSettings[type] = Math.max(0, Math.min(max, countdownSettings[type] + delta));
+            document.getElementById(`countdown-${type}`).textContent = countdownSettings[type];
+            if (!countdownRunning) {
+                countdownTime = countdownSettings.hours * 3600 + countdownSettings.minutes * 60 + countdownSettings.seconds;
+                updateCountdownDisplay();
+            }
+        }
+
+        function updateCountdownDisplay() {
+            const hours = Math.floor(countdownTime / 3600);
+            const minutes = Math.floor((countdownTime % 3600) / 60);
+            const seconds = countdownTime % 60;
+            if (hours > 0) {
+                document.getElementById('countdown-display').textContent = 
+                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            } else {
+                document.getElementById('countdown-display').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+        }
+
+        function toggleCountdown() {
+            if (countdownTime <= 0) return;
+            
+            countdownRunning = !countdownRunning;
+            const btn = document.getElementById('countdown-start');
+            btn.innerHTML = countdownRunning ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>';
+            document.getElementById('countdown-settings').style.opacity = countdownRunning ? '0.5' : '1';
+            document.getElementById('countdown-label').textContent = countdownRunning ? 'Counting down...' : 'Set your timer';
+            
+            if (countdownRunning) {
+                countdownInterval = setInterval(() => {
+                    countdownTime--;
+                    updateCountdownDisplay();
+                    if (countdownTime <= 0) {
+                        countdownComplete();
+                    }
+                }, 1000);
+            } else {
+                clearInterval(countdownInterval);
+            }
+        }
+
+        function countdownComplete() {
+            clearInterval(countdownInterval);
+            countdownRunning = false;
+            document.getElementById('countdown-start').innerHTML = '<i class="fas fa-play"></i>';
+            document.getElementById('countdown-label').textContent = 'Time\'s up!';
+            document.getElementById('countdown-settings').style.opacity = '1';
+            playNotification();
+        }
+
+        function resetCountdown() {
+            clearInterval(countdownInterval);
+            countdownRunning = false;
+            countdownTime = countdownSettings.hours * 3600 + countdownSettings.minutes * 60 + countdownSettings.seconds;
+            document.getElementById('countdown-start').innerHTML = '<i class="fas fa-play"></i>';
+            document.getElementById('countdown-label').textContent = 'Set your timer';
+            document.getElementById('countdown-settings').style.opacity = '1';
+            updateCountdownDisplay();
+        }
+
+        // ==================== NOTIFICATION ====================
+        function playNotification() {
+            // Create audio context for notification
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = 800;
+                oscillator.type = 'sine';
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.5);
+            } catch (e) {
+                console.log('Audio notification not supported');
+            }
+            
+            // Browser notification
+            if (Notification.permission === 'granted') {
+                new Notification('Timer Complete!', { body: 'Your timer has finished.' });
+            } else if (Notification.permission !== 'denied') {
+                Notification.requestPermission();
+            }
+        }
+
+        // Request notification permission on load
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
+
+        // Initialize displays
+        updatePomodoroDisplay();
+        updateStopwatchDisplay();
+        updateCountdownDisplay();
+    </script>
+</body>
+</html>
