@@ -398,7 +398,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function setupEventListeners() {
         // Dark mode toggle
         darkModeToggle.addEventListener('click', () => {
-            applyTheme(isDarkMode ? 'light' : 'dark');
+            const newTheme = isDarkMode ? 'light' : 'dark';
+            applyTheme(newTheme);
         });
         
         // Month navigation

@@ -222,12 +222,9 @@
                 </select>
             </div>
             <div class="form-group">
-                <label>Duration (hours)</label>
+                <label>Duration (minutes)</label>
                 <select id="modal-duration">
-                    <option value="1">1 hour</option>
-                    <option value="2">2 hours</option>
-                    <option value="3">3 hours</option>
-                    <option value="4">4 hours</option>
+                    <!-- Options will be populated by JavaScript -->
                 </select>
             </div>
             <div class="form-group">
@@ -298,8 +295,8 @@
 
     <footer>
         <div class="container">
-            <p id="quote-text">"The secret of getting ahead is getting started."</p>
-            <p>&copy; 2026 Daily Schedule Optimizer. Created by GitHub Copilot.</p>
+            <p id="quote-text">"To those who ever gives up is gay."</p>
+            <p>&copy; 2026 Daily Schedule Optimizer. Created by Human AI.</p>
             <p class="footer-hint">Press <kbd>?</kbd> for keyboard shortcuts</p>
         </div>
     </footer>
@@ -310,5 +307,25 @@
     <!-- html2canvas for image export -->
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script src="app.js"></script>
+    <script>
+    // Dynamically populate duration dropdown with 1-59 minutes and 1 hour
+    document.addEventListener('DOMContentLoaded', function() {
+        var select = document.getElementById('modal-duration');
+        if (select) {
+            // Add 1-59 minutes
+            for (let i = 1; i < 60; i++) {
+                let option = document.createElement('option');
+                option.value = (i / 60).toFixed(2).replace(/\.00$/, '');
+                option.textContent = i + ' minute' + (i > 1 ? 's' : '');
+                select.appendChild(option);
+            }
+            // Add 1 hour
+            let hourOption = document.createElement('option');
+            hourOption.value = '1';
+            hourOption.textContent = '1 hour';
+            select.appendChild(hourOption);
+        }
+    });
+    </script>
 </body>
 </html>

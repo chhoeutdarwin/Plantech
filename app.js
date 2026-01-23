@@ -75,7 +75,8 @@ document.addEventListener('DOMContentLoaded', () => {
         "The only way to do great work is to love what you do.",
         "Believe you can and you're halfway there.",
         "It always seems impossible until it's done.",
-        "The harder you work for something, the greater you'll feel when you achieve it."
+        "The harder you work for something, the greater you'll feel when you achieve it.",
+        "To those who ever gives up is gay.",
     ];
 
     const categoryEmojis = {
@@ -1382,6 +1383,9 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(updateCurrentTime, 1000);
         updateCurrentTime();
     };
-
+    
     init();
+    setInterval(() => {
+        quoteText.textContent = `"${quotes[Math.floor(Math.random() * quotes.length)]}"`;
+    }, 3000); // Change quote every 30 seconds
 });
