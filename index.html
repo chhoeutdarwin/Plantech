@@ -174,7 +174,9 @@
             <span class="close-modal">&times;</span>
             <h2><i class="fas fa-stopwatch"></i> Pomodoro Timer</h2>
             <div class="timer-display">
-                <span id="timer-minutes">25</span>:<span id="timer-seconds">00</span>
+                <button id="timer-minus" class="timer-adjust-btn" style="font-size:0.8em; margin-right:10px;">−</button>
+                <span id="timer-minutes">10</span>:<span id="timer-seconds">00</span>
+                <button id="timer-plus" class="timer-adjust-btn" style="font-size:0.8em; margin-left:10px;">+</button>
             </div>
             <div class="timer-controls">
                 <button id="timer-start" class="timer-btn"><i class="fas fa-play"></i></button>
@@ -186,6 +188,7 @@
                 <button class="preset-btn" data-minutes="15">15 min</button>
                 <button class="preset-btn" data-minutes="5">5 min</button>
                 <button class="preset-btn" data-minutes="45">45 min</button>
+                <button class="preset-btn" data-minutes="30">30 min</button>
             </div>
             <p id="timer-task">No task selected</p>
         </div>
@@ -307,6 +310,33 @@
     <!-- html2canvas for image export -->
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script src="app.js"></script>
+        <script>
+        // Pomodoro Timer +/- buttons logic
+        document.addEventListener('DOMContentLoaded', function() {
+            const minusBtn = document.getElementById('timer-minus');
+            const plusBtn = document.getElementById('timer-plus');
+            const minSpan = document.getElementById('timer-minutes');
+            const secSpan = document.getElementById('timer-seconds');
+            if (minusBtn && plusBtn && minSpan && secSpan) {
+                minusBtn.addEventListener('click', function() {
+                    let min = parseInt(minSpan.textContent, 10);
+                    if (min > 1) {
+                        min--;
+                        minSpan.textContent = min;
+                        secSpan.textContent = '00';
+                    }
+                });
+                plusBtn.addEventListener('click', function() {
+                    let min = parseInt(minSpan.textContent, 10);
+                    if (min < 60) {
+                        min++;
+                        minSpan.textContent = min;
+                        secSpan.textContent = '00';
+                    }
+                });
+            }
+        });
+        </script>
     <script>
     // Dynamically populate duration dropdown with 1-59 minutes and 1 hour
     document.addEventListener('DOMContentLoaded', function() {

@@ -319,9 +319,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Save Button
+
             const saveButton = document.createElement('button');
             saveButton.classList.add('save-btn');
-            saveButton.textContent = 'Save';
+            if (taskData && taskData.task) {
+                saveButton.textContent = 'Saved';
+                saveButton.classList.add('saved');
+            } else {
+                saveButton.textContent = 'Save';
+            }
 
             timeBlock.appendChild(completionCheckbox);
             timeBlock.appendChild(timeLabel);
@@ -813,23 +819,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const checkbox = timeBlock.querySelector('.completion-checkbox');
         
         if (e.target.classList.contains('save-btn')) {
+            if (e.target.textContent === 'Saved') {
+                e.target.textContent = 'Save';
+                e.target.classList.remove('saved');
+                return;
+            }
             const schedule = getSchedule();
             const existingTask = schedule[hour] || {};
-            
+
             saveTask(hour, {
                 ...existingTask,
                 task: taskInput.value,
                 completed: checkbox.checked
             });
-            
-            e.target.textContent = 'Saved!';
+
+            e.target.textContent = 'Saved';
             e.target.classList.add('saved');
             showToast('Task saved!', 'success');
-            
-            setTimeout(() => {
-                e.target.textContent = 'Save';
-                e.target.classList.remove('saved');
-            }, 1500);
         }
         
         if (e.target.closest('.edit-btn')) {
@@ -1098,7 +1104,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     modalSave.addEventListener('click', () => {
         const hour = modalHour.value;
-        
+
         saveTask(hour, {
             task: modalTaskName.value,
             category: modalCategory.value,
@@ -1111,11 +1117,27 @@ document.addEventListener('DOMContentLoaded', () => {
             notifyBefore: modalNotifyBefore.value,
             completed: false
         });
-        
+
         generateTimeBlocks();
+
+        // Update the Save button for this hour to show 'Saved'
+        setTimeout(() => {
+            const scheduleContainer = document.getElementById('schedule-container');
+            if (scheduleContainer) {
+                const timeBlock = scheduleContainer.querySelector(`.time-block[data-hour="${hour}"]`);
+                if (timeBlock) {
+                    const saveBtn = timeBlock.querySelector('.save-btn');
+                    if (saveBtn) {
+                        saveBtn.textContent = 'Saved';
+                        saveBtn.classList.add('saved');
+                    }
+                }
+            }
+        }, 10); // Wait for DOM update
+
         closeModal(taskModal);
         showToast('Task saved!', 'success');
-        
+
         if (modalNotification.checked) {
             scheduleNotification(hour, modalTaskName.value, parseInt(modalNotifyBefore.value));
         }
@@ -1174,7 +1196,7 @@ document.addEventListener('DOMContentLoaded', () => {
         timerRunning = false;
     };
 
-    const resetTimer = (minutes = 25) => {
+    const resetTimer = (minutes = 45) => {
         pauseTimer();
         timerMinutesLeft = minutes;
         timerSecondsLeft = 0;
