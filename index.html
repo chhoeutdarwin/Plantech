@@ -1,361 +1,206 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PlanTech</title>
+    <title>PlanTech | Your Daily Scheduler</title>
     <link rel="icon" href="https://i.pinimg.com/736x/55/1e/94/551e94ae8845df9d455f221c07421dcd.jpg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="responsive.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(120deg, #232336 0%, #181820 100%);
+            color: #f5f5f7;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px 30px 20px;
+            background: rgba(34, 35, 54, 0.95);
+            box-shadow: 0 4px 32px 0 #0003;
+            border-radius: 0 0 32px 32px;
+            animation: fadeIn 1.2s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .logo {
+            font-size: 4.5rem;
+            color: #ff5eae;
+            margin-bottom: 12px;
+            text-shadow: 0 2px 16px #5e8bff44;
+        }
+        .title {
+            font-size: 2.7rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            color: #fff;
+        }
+        .desc {
+            font-size: 1.25rem;
+            color: #bdbdbd;
+            max-width: 540px;
+            margin-bottom: 32px;
+            line-height: 1.5;
+        }
+        .actions {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        .action-btn {
+            background: linear-gradient(90deg, #ff5eae 0%, #5e8bff 100%);
+            color: #fff;
+            border: none;
+            border-radius: 30px;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 16px 0 #0002;
+            transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+            outline: none;
+            text-decoration: none;
+            position: relative;
+        }
+        .action-btn:focus {
+            box-shadow: 0 0 0 3px #5e8bff88;
+        }
+        .action-btn.alt {
+            background: #232336;
+            color: #ff5eae;
+            border: 2px solid #ff5eae;
+        }
+        .action-btn.alt2 {
+            background: #232336;
+            color: #5e8bff;
+            border: 2px solid #5e8bff;
+        }
+        .action-btn:hover {
+            background: linear-gradient(90deg, #5e8bff 0%, #ff5eae 100%);
+            transform: translateY(-2px) scale(1.04);
+            box-shadow: 0 4px 24px 0 #5e8bff44;
+        }
+        .features {
+            margin: 48px auto 0 auto;
+            max-width: 900px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 32px;
+            justify-content: center;
+            animation: fadeIn 1.5s;
+        }
+        .feature {
+            background: linear-gradient(120deg, #232336 60%, #181820 100%);
+            border-radius: 22px;
+            padding: 32px 26px;
+            min-width: 220px;
+            max-width: 270px;
+            flex: 1 1 220px;
+            box-shadow: 0 2px 16px 0 #0002;
+            text-align: left;
+            transition: transform 0.18s, box-shadow 0.18s;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            overflow: hidden;
+        }
+        .feature:hover {
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 8px 32px 0 #ff5eae33;
+        }
+        .feature i {
+            font-size: 2.3rem;
+            color: #ff5eae;
+            margin-bottom: 14px;
+            display: block;
+            text-shadow: 0 2px 12px #5e8bff44;
+        }
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+        .feature-desc {
+            color: #bdbdbd;
+            font-size: 1.05rem;
+            line-height: 1.5;
+        }
+        footer {
+            text-align: center;
+            color: #bdbdbd;
+            padding: 22px 0 12px 0;
+            font-size: 1.05rem;
+            background: #232336;
+            border-radius: 32px 32px 0 0;
+            margin-top: 48px;
+            box-shadow: 0 -2px 16px 0 #0002;
+        }
+        @media (max-width: 700px) {
+            .title { font-size: 2rem; }
+            .logo { font-size: 2.5rem; }
+            .features { flex-direction: column; gap: 18px; }
+            .feature { max-width: 100%; }
+            .hero { padding: 36px 8px 18px 8px; }
+        }
+        @media (max-width: 400px) {
+            .actions { flex-direction: column; gap: 10px; }
+            .feature { padding: 18px 8px; }
+        }
+    </style>
 </head>
 <body>
-    <!-- Left Sidebar -->
-    <aside class="sidebar">
-        <div class="sidebar-logo">
-            <i class="fas fa-calendar-check"></i>
-        </div>
-        <nav class="sidebar-nav">
-            <a href="dashboard.html" class="sidebar-tab" title="Dashboard">
-                <i class="fas fa-th-large"></i>
-                <span>Dashboard</span>
-            </a>
-            <a href="index.html" class="sidebar-tab active" title="Schedule">
-                <i class="fas fa-tasks"></i>
-                <span>Schedule</span>
-            </a>
-            <a href="timer.html" class="sidebar-tab" title="Timer">
-                <i class="fas fa-stopwatch"></i>
-                <span>Timer</span>
-            </a>
-            <a href="khmer_calendar.html" class="sidebar-tab" title="Khmer Calendar">
-                <i class="fas fa-moon"></i>
-                <span>ខ្មែរ</span>
-            </a>
-            <a href="world_calendar.html" class="sidebar-tab" title="World Calendar">
-                <i class="fas fa-globe"></i>
-                <span>World</span>
-            </a>
-        </nav>
-        <div class="sidebar-bottom">
-            <button id="dark-mode-toggle" class="sidebar-tab" title="Toggle theme">
-                <i class="fas fa-sun"></i>
-            </button>
-        </div>
-    </aside>
-
-    <!-- Main Content -
-    <div class="main-wrapper">
-        <!-- Compact Header -->
-        <header class="top-bar">
-            <div class="container header-row">
-                <div class="logo">
-                    <i class="fas fa-calendar-check"></i>
-                    <span>Schedule</span>
-                </div>
-                <div class="header-stats">
-                    <span class="stat-pill"><i class="fas fa-fire"></i> <span id="streak-count">0</span>d</span>
-                    <span class="stat-pill"><i class="fas fa-tasks"></i> <span id="tasks-completed">0</span>/<span id="tasks-total">0</span></span>
-                    <span class="stat-pill clock"><i class="fas fa-clock"></i> <span id="current-time">00:00</span></span>
-                </div>
-                <div class="header-actions">
-                    <button id="menu-toggle" class="icon-btn" title="Menu"><i class="fas fa-ellipsis-v"></i></button>
-                </div>
-            </div>
-        </header>
-
-        <!-- Nav Bar -->
-        <nav class="nav-bar">
-            <div class="container nav-row">
-                <div class="date-nav">
-                    <button id="prev-day" class="nav-btn"><i class="fas fa-chevron-left"></i></button>
-                    <span id="current-date" class="date-display" title="Click for today">Today</span>
-                    <button id="next-day" class="nav-btn"><i class="fas fa-chevron-right"></i></button>
-                </div>
-                <div class="progress-container">
-                    <div class="progress-bar" id="progress-bar"></div>
-                </div>
-                <div class="view-switcher">
-                    <button class="view-btn active" data-view="day" title="Day"><i class="fas fa-calendar-day"></i></button>
-                    <button class="view-btn" data-view="week" title="Week"><i class="fas fa-calendar-week"></i></button>
-                    <button class="view-btn" data-view="month" title="Month"><i class="fas fa-calendar-alt"></i></button>
-                    <button class="view-btn" data-view="stats" title="Stats"><i class="fas fa-chart-bar"></i></button>
-                </div>
-            </div>
-        </nav>
-
-    <!-- Dropdown Menu (Hidden) -->
-    <div id="dropdown-menu" class="dropdown-menu hidden">
-        <div class="menu-section">
-            <h4>Actions</h4>
-            <button id="download-schedule" class="menu-item"><i class="fas fa-download"></i> Download Image</button>
-            <button id="download-pdf" class="menu-item"><i class="fas fa-file-pdf"></i> Download PDF</button>
-            <button id="export-json" class="menu-item"><i class="fas fa-file-export"></i> Export JSON</button>
-            <button id="import-json" class="menu-item"><i class="fas fa-file-import"></i> Import JSON</button>
-            <button id="share-schedule" class="menu-item"><i class="fas fa-share-alt"></i> Share</button>
-            <button id="shortcuts-btn" class="menu-item"><i class="fas fa-keyboard"></i> Shortcuts</button>
-            <button id="clear-schedule" class="menu-item danger"><i class="fas fa-trash-alt"></i> Clear All</button>
-        </div>
-        <div class="menu-section">
-            <h4>Theme Color</h4>
-            <div class="theme-colors">
-                <button class="color-btn active" data-theme="default" style="background: #007bff;"></button>
-                <button class="color-btn" data-theme="green" style="background: #28a745;"></button>
-                <button class="color-btn" data-theme="purple" style="background: #6f42c1;"></button>
-                <button class="color-btn" data-theme="orange" style="background: #fd7e14;"></button>
-                <button class="color-btn" data-theme="pink" style="background: #e83e8c;"></button>
-            </div>
-        </div>
-        <input type="file" id="import-file" accept=".json" style="display: none;">
-    </div>
-
     <main>
-        <!-- Day View -->
-        <div id="day-view" class="view-content active">
-            <div id="schedule-container" class="container">
-                <!-- Time blocks will be generated by JavaScript -->
-            </div>
-        </div>
-
-        <!-- Week View -->
-        <div id="week-view" class="view-content">
-            <div class="container">
-                <div id="week-container" class="week-grid">
-                    <!-- Week view will be generated by JavaScript -->
-                </div>
-            </div>
-        </div>
-
-        <!-- Month View -->
-        <div id="month-view" class="view-content">
-            <div class="container">
-                <div id="month-container" class="month-grid">
-                    <!-- Month view will be generated by JavaScript -->
-                </div>
-            </div>
-        </div>
-
-        <!-- Stats View -->
-        <div id="stats-view" class="view-content">
-            <div class="container">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <h3><i class="fas fa-chart-pie"></i> Completion Rate</h3>
-                        <div class="chart-container">
-                            <canvas id="completion-chart"></canvas>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <h3><i class="fas fa-chart-line"></i> Weekly Progress</h3>
-                        <div class="chart-container">
-                            <canvas id="weekly-chart"></canvas>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <h3><i class="fas fa-tags"></i> Time by Category</h3>
-                        <div class="chart-container">
-                            <canvas id="category-chart"></canvas>
-                        </div>
-                    </div>
-                    <div class="stat-card full-width">
-                        <h3><i class="fas fa-history"></i> Activity History</h3>
-                        <div id="activity-heatmap" class="heatmap">
-                            <!-- Heatmap will be generated by JavaScript -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <section class="hero" aria-label="Welcome">
+            <div class="logo"><i class="fas fa-calendar-check" aria-hidden="true"></i></div>
+            <h1 class="title">Welcome to PlanTech</h1>
+            <p class="desc">
+                Your all-in-one daily schedule optimizer. Plan, track, and achieve your goals with powerful tools for productivity, focus, and time management—all in a beautiful, easy-to-use interface.
+            </p>
+            <nav class="actions" aria-label="Main actions">
+                <a href="schedule.html" class="action-btn">Get Started</a>
+                <a href="dashboard.html" class="action-btn">Dashboard</a>
+                <a href="timer.html" class="action-btn alt">Pomodoro Timer</a>
+                <a href="khmer_calendar.html" class="action-btn alt2">Khmer Calendar</a>
+            </nav>
+        </section>
+        <section class="features" aria-label="Features">
+            <a href="schedule.html" class="feature" tabindex="0">
+                <i class="fas fa-tasks" aria-hidden="true"></i>
+                <div class="feature-title">Add Task</div>
+                <div class="feature-desc">Organize your day with intuitive time blocks, priorities, and categories.</div>
+            </a>
+            <a href="khmer_calendar.html" class="feature" tabindex="0">
+                <i class="fas fa-moon" aria-hidden="true"></i>
+                <div class="feature-title">Khmer Calendar</div>
+                <div class="feature-desc">Switch between global and Khmer calendars for cultural flexibility.</div>
+            </a>
+            <a href="timer.html" class="feature" tabindex="0">
+                <i class="fas fa-clock" aria-hidden="true"></i>
+                <div class="feature-title">Pomodoro</div>
+                <div class="feature-desc">Boost productivity with built-in Pomodoro timer and quick presets.</div>
+            </a>
+            <a href="schedule.html#stats-view" class="feature" tabindex="0">
+                <i class="fas fa-chart-bar" aria-hidden="true"></i>
+                <div class="feature-title">View Stats</div>
+                <div class="feature-desc">Visualize your achievements and track your habits over time.</div>
+            </a>
+        </section>
     </main>
-
-    <!-- Pomodoro Timer Modal -->
-    <div id="pomodoro-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h2><i class="fas fa-stopwatch"></i> Pomodoro Timer</h2>
-            <div class="timer-display">
-                <button id="timer-minus" class="timer-adjust-btn" style="font-size:0.8em; margin-right:10px;">−</button>
-                <span id="timer-minutes">10</span>:<span id="timer-seconds">00</span>
-                <button id="timer-plus" class="timer-adjust-btn" style="font-size:0.8em; margin-left:10px;">+</button>
-            </div>
-            <div class="timer-controls">
-                <button id="timer-start" class="timer-btn"><i class="fas fa-play"></i></button>
-                <button id="timer-pause" class="timer-btn"><i class="fas fa-pause"></i></button>
-                <button id="timer-reset" class="timer-btn"><i class="fas fa-redo"></i></button>
-            </div>
-            <div class="timer-presets">
-                <button class="preset-btn" data-minutes="25">25 min</button>
-                <button class="preset-btn" data-minutes="15">15 min</button>
-                <button class="preset-btn" data-minutes="5">5 min</button>
-                <button class="preset-btn" data-minutes="45">45 min</button>
-                <button class="preset-btn" data-minutes="30">30 min</button>
-            </div>
-            <p id="timer-task">No task selected</p>
-        </div>
-    </div>
-
-    <!-- Task Details Modal -->
-    <div id="task-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h2><i class="fas fa-edit"></i> Task Details</h2>
-            <input type="hidden" id="modal-hour">
-            <div class="form-group">
-                <label>Task Name</label>
-                <input type="text" id="modal-task-name" placeholder="Enter task name">
-            </div>
-            <div class="form-group">
-                <label>Category</label>
-                <select id="modal-category">
-                    <option value="none">📋 None</option>
-                    <option value="work">💼 Work</option>
-                    <option value="personal">👤 Personal</option>
-                    <option value="health">💪 Health</option>
-                    <option value="learning">📚 Learning</option>
-                    <option value="social">👥 Social</option>
-                    <option value="errands">🛒 Errands</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Priority</label>
-                <select id="modal-priority">
-                    <option value="low">🟢 Low</option>
-                    <option value="medium">🟡 Medium</option>
-                    <option value="high">🔴 High</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Duration (minutes)</label>
-                <select id="modal-duration">
-                    <!-- Options will be populated by JavaScript -->
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Notes</label>
-                <textarea id="modal-notes" placeholder="Add notes or description..."></textarea>
-            </div>
-            <div class="form-group">
-                <label>
-                    <input type="checkbox" id="modal-recurring"> Recurring Task
-                </label>
-                <select id="modal-recurrence" disabled>
-                    <option value="daily">Daily</option>
-                    <option value="weekdays">Weekdays</option>
-                    <option value="weekly">Weekly</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>
-                    <input type="checkbox" id="modal-notification"> Enable Notification
-                </label>
-                <select id="modal-notify-before">
-                    <option value="0">At start time</option>
-                    <option value="5">5 minutes before</option>
-                    <option value="10">10 minutes before</option>
-                    <option value="15">15 minutes before</option>
-                </select>
-            </div>
-            <div class="modal-actions">
-                <button id="modal-save" class="control-btn"><i class="fas fa-save"></i> Save</button>
-                <button id="modal-delete" class="control-btn danger"><i class="fas fa-trash"></i> Delete</button>
-                <button id="modal-pomodoro" class="control-btn"><i class="fas fa-stopwatch"></i> Start Timer</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Notification Permission Banner -->
-    <div id="notification-banner" class="notification-banner hidden">
-        <p><i class="fas fa-bell"></i> Enable notifications to get reminders for your tasks!</p>
-        <button id="enable-notifications" class="control-btn small">Enable</button>
-        <button id="dismiss-banner" class="control-btn small">Dismiss</button>
-    </div>
-
-    <!-- Keyboard Shortcuts Help -->
-    <div id="shortcuts-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h2><i class="fas fa-keyboard"></i> Keyboard Shortcuts</h2>
-            <div class="shortcuts-list">
-                <div class="shortcut-item"><kbd>N</kbd> New task in current hour</div>
-                <div class="shortcut-item"><kbd>T</kbd> Go to today</div>
-                <div class="shortcut-item"><kbd>←</kbd> Previous day</div>
-                <div class="shortcut-item"><kbd>→</kbd> Next day</div>
-                <div class="shortcut-item"><kbd>D</kbd> Day view</div>
-                <div class="shortcut-item"><kbd>W</kbd> Week view</div>
-                <div class="shortcut-item"><kbd>M</kbd> Month view</div>
-                <div class="shortcut-item"><kbd>S</kbd> Stats view</div>
-                <div class="shortcut-item"><kbd>P</kbd> Open Pomodoro timer</div>
-                <div class="shortcut-item"><kbd>Ctrl+S</kbd> Save all tasks</div>
-                <div class="shortcut-item"><kbd>Ctrl+E</kbd> Export schedule</div>
-                <div class="shortcut-item"><kbd>?</kbd> Show shortcuts</div>
-                <div class="shortcut-item"><kbd>Esc</kbd> Close modals</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Toast Notifications -->
-    <div id="toast-container"></div>
-
     <footer>
-        <div class="container">
-            <p id="quote-text">"To those who ever gives up is gay."</p>
-            <p>&copy; 2026 Daily Schedule Optimizer. Created by Human AI.</p>
-            <p class="footer-hint">Press <kbd>?</kbd> for keyboard shortcuts</p>
-        </div>
+        &copy; 2026 PlanTech. Crafted for productivity and success.
     </footer>
-    </div><!-- End main-wrapper -->
-
-    <!-- Chart.js for statistics -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- html2canvas for image export -->
-    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-    <script src="app.js"></script>
-        <script>
-        // Pomodoro Timer +/- buttons logic
-        document.addEventListener('DOMContentLoaded', function() {
-            const minusBtn = document.getElementById('timer-minus');
-            const plusBtn = document.getElementById('timer-plus');
-            const minSpan = document.getElementById('timer-minutes');
-            const secSpan = document.getElementById('timer-seconds');
-            if (minusBtn && plusBtn && minSpan && secSpan) {
-                minusBtn.addEventListener('click', function() {
-                    let min = parseInt(minSpan.textContent, 10);
-                    if (min > 1) {
-                        min--;
-                        minSpan.textContent = min;
-                        secSpan.textContent = '00';
-                    }
-                });
-                plusBtn.addEventListener('click', function() {
-                    let min = parseInt(minSpan.textContent, 10);
-                    if (min < 60) {
-                        min++;
-                        minSpan.textContent = min;
-                        secSpan.textContent = '00';
-                    }
-                });
-            }
-        });
-        </script>
-    <script>
-    // Dynamically populate duration dropdown with 1-59 minutes and 1 hour
-    document.addEventListener('DOMContentLoaded', function() {
-        var select = document.getElementById('modal-duration');
-        if (select) {
-            // Add 1-59 minutes
-            for (let i = 1; i < 60; i++) {
-                let option = document.createElement('option');
-                option.value = (i / 60).toFixed(2).replace(/\.00$/, '');
-                option.textContent = i + ' minute' + (i > 1 ? 's' : '');
-                select.appendChild(option);
-            }
-            // Add 1 hour
-            let hourOption = document.createElement('option');
-            hourOption.value = '1';
-            hourOption.textContent = '1 hour';
-            select.appendChild(hourOption);
-        }
-    });
-    </script>
 </body>
 </html>

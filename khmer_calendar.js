@@ -1,3 +1,49 @@
+// ==================== DARK MODE TOGGLE ====================
+document.addEventListener('DOMContentLoaded', function() {
+    // DEBUG: Show current theme in #theme-debug
+    function updateThemeDebug() {
+        const dbg = document.getElementById('theme-debug');
+        if (dbg) dbg.textContent = 'Theme: ' + document.documentElement.getAttribute('data-theme');
+    }
+
+    // Call after theme change
+    function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        setIcon(theme);
+        updateThemeDebug();
+    }
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    if (!darkModeToggle) return;
+
+    function getTheme() {
+        return localStorage.getItem('theme') === 'dark' ? 'dark' : 'light';
+    }
+
+    function setIcon(theme) {
+        const icon = darkModeToggle.querySelector('i');
+        if (icon) {
+            icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+    }
+
+
+    // Only one applyTheme function, always updates icon and debug
+    function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        setIcon(theme);
+        updateThemeDebug();
+    }
+
+    // Set initial theme and icon on load
+    applyTheme(getTheme());
+
+    darkModeToggle.addEventListener('click', function() {
+        const newTheme = getTheme() === 'dark' ? 'light' : 'dark';
+        applyTheme(newTheme);
+    });
+});
 /**
  * Khmer Calendar - ប្រតិទិនខ្មែរ
  * Lunisolar calendar calculations for Cambodia

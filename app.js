@@ -77,6 +77,11 @@ document.addEventListener('DOMContentLoaded', () => {
         "It always seems impossible until it's done.",
         "The harder you work for something, the greater you'll feel when you achieve it.",
         "To those who ever gives up is gay.",
+        "Productivity is being able to do things that you were never able to do before.",
+        "Start where you are. Use what you have. Do what you can.",
+        "Don't count the days, make the days count.",
+        "Great things are done by a series of small things brought together."
+        
     ];
 
     const categoryEmojis = {
@@ -1410,4 +1415,16 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(() => {
         quoteText.textContent = `"${quotes[Math.floor(Math.random() * quotes.length)]}"`;
     }, 3000); // Change quote every 30 seconds
+
+    // If page loaded with #add-task hash, open the task modal for the current hour
+    if (window.location.hash === '#add-task') {
+        const hour = String(new Date().getHours());
+        try {
+            openTaskModal(hour);
+            // remove hash without reloading
+            history.replaceState(null, '', window.location.pathname);
+        } catch (e) {
+            console.warn('Failed to open task modal from hash', e);
+        }
+    }
 });
