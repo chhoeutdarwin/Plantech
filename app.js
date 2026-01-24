@@ -825,8 +825,20 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (e.target.classList.contains('save-btn')) {
             if (e.target.textContent === 'Saved') {
-                e.target.textContent = 'Save';
-                e.target.classList.remove('saved');
+                // Remove from storage as well as UI. If recurring, mark as skipped for today.
+                const allSchedules = getAllSchedules();
+                const dateKey = getDateKey();
+                if (allSchedules[dateKey] && allSchedules[dateKey][hour]) {
+                    const task = allSchedules[dateKey][hour];
+                    if (task.recurring) {
+                        allSchedules[dateKey][hour] = { skipped: true };
+                    } else {
+                        delete allSchedules[dateKey][hour];
+                    }
+                    saveAllSchedules(allSchedules);
+                }
+                generateTimeBlocks(); // Refresh UI to reflect unsaved state
+                showToast('Task unsaved!', 'info');
                 return;
             }
             const schedule = getSchedule();
