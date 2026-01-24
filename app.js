@@ -62,6 +62,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalPomodoro = document.getElementById('modal-pomodoro');
 
     // ==================== CONSTANTS ====================
+        // Helper to populate duration select (1min to 59min)
+        function populateDurationSelect() {
+            if (typeof modalDuration !== 'undefined' && modalDuration) {
+                modalDuration.innerHTML = '';
+                for (let i = 1; i <= 59; i++) {
+                    const opt = document.createElement('option');
+                    opt.value = i;
+                    opt.textContent = `${i} min`;
+                    modalDuration.appendChild(opt);
+                }
+            }
+        }
+        // Only repopulate when the modal is opened
+        setTimeout(populateDurationSelect, 0);
     const startHour = 0;
     const endHour = 23;
     
@@ -76,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
         "Believe you can and you're halfway there.",
         "It always seems impossible until it's done.",
         "The harder you work for something, the greater you'll feel when you achieve it.",
-        "To those who ever gives up is gay.",
+        "To those whoever gives up is gay.",
         "Productivity is being able to do things that you were never able to do before.",
         "Start where you are. Use what you have. Do what you can.",
         "Don't count the days, make the days count.",
@@ -1099,19 +1113,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const openTaskModal = (hour) => {
         const schedule = getSchedule();
         const task = schedule[hour] || {};
-        
+        // Ensure duration select is populated before setting value
+        populateDurationSelect();
         modalHour.value = hour;
         modalTaskName.value = task.task || '';
         modalCategory.value = task.category || 'none';
         modalPriority.value = task.priority || 'low';
-        modalDuration.value = task.duration || '1';
+        // Always set as string and check if value exists in options
+        const durationValue = task.duration ? String(task.duration) : '1';
+        if ([...modalDuration.options].some(opt => opt.value === durationValue)) {
+            modalDuration.value = durationValue;
+        } else {
+            modalDuration.value = '1';
+        }
         modalNotes.value = task.notes || '';
         modalRecurring.checked = task.recurring || false;
         modalRecurrence.value = task.recurrence || 'daily';
         modalRecurrence.disabled = !task.recurring;
         modalNotification.checked = task.notification || false;
         modalNotifyBefore.value = task.notifyBefore || '5';
-        
+
         openModal(taskModal);
     };
 

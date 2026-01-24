@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PlanTech | Your Daily Scheduler</title>
+  <link rel="icon" href="https://i.pinimg.com/736x/55/1e/94/551e94ae8845df9d455f221c07421dcd.jpg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(120deg, #232336 0%, #181820 100%);
+      color: #f5f5f7;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 70px 20px 40px 20px;
+      background: rgba(34, 35, 54, 0.98);
+      box-shadow: 0 4px 32px 0 #0003;
+      border-radius: 0 0 32px 32px;
+      animation: fadeIn 1.2s;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-30px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    .logo {
+      font-size: 4.5rem;
+      color: #ff5eae;
+      margin-bottom: 12px;
+      text-shadow: 0 2px 16px #5e8bff44;
+    }
+    .title {
+      font-size: 2.7rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+      color: #fff;
+    }
+    .desc {
+      font-size: 1.25rem;
+      color: #bdbdbd;
+      max-width: 540px;
+      margin-bottom: 32px;
+      line-height: 1.5;
+    }
+    .actions {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+    .action-btn {
+      background: linear-gradient(90deg, #ff5eae 0%, #5e8bff 100%);
+      color: #fff;
+      border: none;
+      border-radius: 30px;
+      padding: 15px 40px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 16px 0 #0002;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      outline: none;
+      text-decoration: none;
+      position: relative;
+    }
+    .action-btn:focus {
+      box-shadow: 0 0 0 3px #5e8bff88;
+    }
+    .action-btn.alt {
+      background: #232336;
+      color: #ff5eae;
+      border: 2px solid #ff5eae;
+    }
+    .action-btn.alt2 {
+      background: #232336;
+      color: #5e8bff;
+      border: 2px solid #5e8bff;
+    }
+    .action-btn:hover {
+      background: linear-gradient(90deg, #5e8bff 0%, #ff5eae 100%);
+      transform: translateY(-2px) scale(1.04);
+      box-shadow: 0 4px 24px 0 #5e8bff44;
+    }
+    .features {
+      margin: 48px auto 0 auto;
+      max-width: 900px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 32px;
+      justify-content: center;
+      animation: fadeIn 1.5s;
+    }
+    .feature {
+      background: linear-gradient(120deg, #232336 60%, #181820 100%);
+      border-radius: 22px;
+      padding: 32px 26px;
+      min-width: 220px;
+      max-width: 270px;
+      flex: 1 1 220px;
+      box-shadow: 0 2px 16px 0 #0002;
+      text-align: left;
+      transition: transform 0.18s, box-shadow 0.18s;
+      text-decoration: none;
+      color: inherit;
+      position: relative;
+      overflow: hidden;
+    }
+    .feature:hover {
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 8px 32px 0 #ff5eae33;
+    }
+    .feature i {
+      font-size: 2.3rem;
+      color: #ff5eae;
+      margin-bottom: 14px;
+      display: block;
+      text-shadow: 0 2px 12px #5e8bff44;
+    }
+    .feature-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+    .feature-desc {
+      color: #bdbdbd;
+      font-size: 1.05rem;
+      line-height: 1.5;
+    }
+    footer {
+      text-align: center;
+      color: #bdbdbd;
+      padding: 22px 0 12px 0;
+      font-size: 1.05rem;
+      background: #232336;
+      border-radius: 32px 32px 0 0;
+      margin-top: 48px;
+      box-shadow: 0 -2px 16px 0 #0002;
+    }
+    @media (max-width: 700px) {
+      .title { font-size: 2rem; }
+      .logo { font-size: 2.5rem; }
+      .features { flex-direction: column; gap: 18px; }
+      .feature { max-width: 100%; }
+      .hero { padding: 36px 8px 18px 8px; }
+    }
+    @media (max-width: 400px) {
+      .actions { flex-direction: column; gap: 10px; }
+      .feature { padding: 18px 8px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero" aria-label="Welcome">
+      <div class="logo"><i class="fas fa-calendar-check" aria-hidden="true"></i></div>
+      <h1 class="title">Welcome to PlanTech</h1>
+      <p class="desc">
+        Your all-in-one daily schedule optimizer. Plan, track, and achieve your goals with powerful tools for productivity, focus, and time management—all in a beautiful, easy-to-use interface.
+      </p>
+      <nav class="actions" aria-label="Main actions">
+        <a href="schedule.html" class="action-btn">Get Started</a>
+        <a href="dashboard.html" class="action-btn">Dashboard</a>
+        <a href="timer.html" class="action-btn alt">Pomodoro Timer</a>
+        <a href="khmer_calendar.html" class="action-btn alt2">Khmer Calendar</a>
+      </nav>
+    </section>
+    <section class="features" aria-label="Features">
+      <a href="schedule.html" class="feature" tabindex="0">
+        <i class="fas fa-tasks" aria-hidden="true"></i>
+        <div class="feature-title">Add Task</div>
+        <div class="feature-desc">Organize your day with intuitive time blocks, priorities, and categories.</div>
+      </a>
+      <a href="khmer_calendar.html" class="feature" tabindex="0">
+        <i class="fas fa-moon" aria-hidden="true"></i>
+        <div class="feature-title">Khmer Calendar</div>
+        <div class="feature-desc">Switch between global and Khmer calendars for cultural flexibility.</div>
+      </a>
+      <a href="timer.html" class="feature" tabindex="0">
+        <i class="fas fa-clock" aria-hidden="true"></i>
+        <div class="feature-title">Pomodoro</div>
+        <div class="feature-desc">Boost productivity with built-in Pomodoro timer and quick presets.</div>
+      </a>
+      <a href="schedule.html#stats-view" class="feature" tabindex="0">
+        <i class="fas fa-chart-bar" aria-hidden="true"></i>
+        <div class="feature-title">View Stats</div>
+        <div class="feature-desc">Visualize your achievements and track your habits over time.</div>
+      </a>
+    </section>
+  </main>
+  <footer>
+    &copy; 2026 PlanTech. Crafted for productivity and success.
+  </footer>
+</body>
+</html>
