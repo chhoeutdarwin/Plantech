@@ -1,49 +1,4 @@
-// ==================== DARK MODE TOGGLE ====================
-document.addEventListener('DOMContentLoaded', function() {
-    // DEBUG: Show current theme in #theme-debug
-    function updateThemeDebug() {
-        const dbg = document.getElementById('theme-debug');
-        if (dbg) dbg.textContent = 'Theme: ' + document.documentElement.getAttribute('data-theme');
-    }
-
-    // Call after theme change
-    function applyTheme(theme) {
-        document.documentElement.setAttribute('data-theme', theme);
-        localStorage.setItem('theme', theme);
-        setIcon(theme);
-        updateThemeDebug();
-    }
-    const darkModeToggle = document.getElementById('dark-mode-toggle');
-    if (!darkModeToggle) return;
-
-    function getTheme() {
-        return localStorage.getItem('theme') === 'dark' ? 'dark' : 'light';
-    }
-
-    function setIcon(theme) {
-        const icon = darkModeToggle.querySelector('i');
-        if (icon) {
-            icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-        }
-    }
-
-
-    // Only one applyTheme function, always updates icon and debug
-    function applyTheme(theme) {
-        document.documentElement.setAttribute('data-theme', theme);
-        localStorage.setItem('theme', theme);
-        setIcon(theme);
-        updateThemeDebug();
-    }
-
-    // Set initial theme and icon on load
-    applyTheme(getTheme());
-
-    darkModeToggle.addEventListener('click', function() {
-        const newTheme = getTheme() === 'dark' ? 'light' : 'dark';
-        applyTheme(newTheme);
-    });
-});
+// (Removed duplicate theme toggle logic. Theme logic is handled in the main calendar code below.)
 /**
  * Khmer Calendar - ប្រតិទិនខ្មែរ
  * Lunisolar calendar calculations for Cambodia
@@ -223,7 +178,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==================== DOM ELEMENTS ====================
-    const darkModeToggle = document.getElementById('dark-mode-toggle');
     const khmerDateFull = document.getElementById('khmer-date-full');
     const gregorianDateEl = document.getElementById('gregorian-date');
     const buddhistYearEl = document.getElementById('buddhist-year');
@@ -242,23 +196,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ==================== INITIALIZATION ====================
     function init() {
-        applyTheme(isDarkMode ? 'dark' : 'light');
+        // Always use the theme from localStorage on load
+        const savedTheme = localStorage.getItem('theme') === 'dark' ? 'dark' : 'light';
+        isDarkMode = savedTheme === 'dark';
         updateTodayDisplay();
         renderCalendar();
         renderMonthsReference();
         renderHolidays();
         setupEventListeners();
-    }
-
-    // ==================== THEME ====================
-    function applyTheme(theme) {
-        document.documentElement.setAttribute('data-theme', theme);
-        localStorage.setItem('theme', theme);
-        isDarkMode = theme === 'dark';
-        const icon = darkModeToggle.querySelector('i');
-        if (icon) {
-            icon.className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
-        }
     }
 
     // ==================== UPDATE TODAY DISPLAY ====================
@@ -442,12 +387,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ==================== EVENT LISTENERS ====================
     function setupEventListeners() {
-        // Dark mode toggle
-        darkModeToggle.addEventListener('click', () => {
-            const newTheme = isDarkMode ? 'light' : 'dark';
-            applyTheme(newTheme);
-        });
-        
         // Month navigation
         prevMonthBtn.addEventListener('click', () => {
             currentDisplayDate.setMonth(currentDisplayDate.getMonth() - 1);
@@ -462,4 +401,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ==================== START ====================
     init();
+});
+
+// === BULLETPROOF DARK/LIGHT MODE TOGGLE ===
+document.addEventListener('DOMContentLoaded', () => {
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    let isDarkMode = localStorage.getItem('theme') === 'dark';
+    function updateTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        isDarkMode = theme === 'dark';
+        if (darkModeToggle) {
+            let icon = darkModeToggle.querySelector('i');
+            if (!icon) {
+                icon = document.createElement('i');
+                darkModeToggle.appendChild(icon);
+            }
+            icon.className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
+        }
+    }
+    updateTheme(isDarkMode ? 'dark' : 'light');
+    if (darkModeToggle) {
+        darkModeToggle.addEventListener('click', () => {
+            updateTheme(isDarkMode ? 'light' : 'dark');
+        });
+    }
 });

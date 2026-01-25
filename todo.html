@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo- UR-Schedule</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Timer Page Styles */
+        .timer-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 100px);
+            padding: 24px;
+        }
+
+        .timer-card {
+            background: var(--card-bg-color);
+            border-radius: var(--radius-lg);
+            padding: 48px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .add-task-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .add-task-container label {
+            color: var(--accent-color);
+            font-size: 1rem;
+            font-weight: 500;
+            margin-right: 4px;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .add-task-container input[type="text"] {
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-size: 1rem;
+            outline: none;
+            transition: border 0.2s;
+        }
+        .add-task-container input[type="text"]:focus {
+            border-color: var(--primary-color);
+        }
+        .add-task-container label {
+    color: #ffffff; /* Replace with any color code or name you like */
+    /* ...other styles... */
+}
+
+        .add-task-container select {
+            padding: 8px 10px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-size: 1rem;
+            outline: none;
+            transition: border 0.2s;
+        }
+        .add-task-container select:focus {
+            border-color: var(--primary-color);
+        }
+
+        .add-task-container button {
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            border: none;
+            background: var(--primary-color);
+            color: #fff;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .add-task-container button:hover {
+            background: var(--primary-hover);
+            transform: scale(1.08);
+        }
+
+        .timer-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 32px;
+            background: var(--bg-color);
+            padding: 6px;
+            border-radius: var(--radius-md);
+        }
+
+        .timer-tab {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            background: transparent;
+            color: var(--accent-color);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s ease;
+        }
+
+        .timer-tab.active {
+            background: var(--card-bg-color);
+            color: var(--primary-color);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .timer-tab:hover:not(.active) {
+            color: var(--text-color);
+        }
+
+        .timer-display {
+            font-size: 5rem;
+            font-weight: 700;
+            color: var(--text-color);
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+            margin-bottom: 16px;
+            letter-spacing: -2px;
+        }
+
+        .timer-label {
+            font-size: 0.9rem;
+            color: var(--accent-color);
+            margin-bottom: 32px;
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+
+        .timer-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .timer-btn.primary {
+            background: var(--primary-color);
+            color: white;
+            width: 80px;
+            height: 80px;
+            font-size: 1.5rem;
+        }
+
+        .timer-btn.primary:hover {
+            background: var(--primary-hover);
+            transform: scale(1.05);
+        }
+
+        .timer-btn.secondary {
+            background: var(--bg-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .timer-btn.secondary:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .timer-btn.danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+        }
+
+        .timer-btn.danger:hover {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        /* Pomodoro Settings */
+        .pomodoro-settings {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .setting-item {
+            text-align: center;
+        }
+
+        .setting-label {
+            font-size: 0.75rem;
+            color: var(--accent-color);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .setting-value {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .setting-value button {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+            background: var(--bg-color);
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .setting-value button:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .setting-value span {
+            font-size: 1.1rem;
+            font-weight: 600;
+            min-width: 40px;
+            color: var(--text-color);
+        }
+
+        /* Session Counter */
+        .session-counter {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        .session-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--border-color);
+            transition: all 0.2s ease;
+        }
+
+        .session-dot.completed {
+            background: var(--success-color);
+        }
+
+        .session-dot.current {
+            background: var(--primary-color);
+            box-shadow: 0 0 0 4px var(--current-highlight);
+        }
+
+        /* Stopwatch Laps */
+        .laps-container {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 24px;
+            text-align: left;
+        }
+
+        .lap-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+
+        .lap-item:last-child {
+            border-bottom: none;
+        }
+
+        .lap-number {
+            color: var(--accent-color);
+        }
+
+        .lap-time {
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .lap-diff {
+            color: var(--primary-color);
+            font-size: 0.8rem;
+        }
+
+        /* Progress Ring */
+        .progress-ring-container {
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring circle {
+            fill: none;
+            stroke-width: 8;
+        }
+
+        .progress-ring .bg {
+            stroke: var(--border-color);
+        }
+
+        .progress-ring .progress {
+            stroke: var(--primary-color);
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.3s ease;
+        }
+
+        .timer-display-wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Hidden */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .page-header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .page-header h1 i {
+            color: var(--primary-color);
+        }
+
+        .page-header p {
+            color: var(--accent-color);
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        
+    <a href="index.html">
+        <div class="sidebar-logo">
+         <i class="fas fa-calendar-check"></i>
+        </div>
+    </a>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="sidebar-tab" title="Dashboard">
+                <i class="fas fa-th-large"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="schedule.html" class="sidebar-tab" title="Schedule">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Schedule</span>
+            </a>
+            <a href="timer.html" class="sidebar-tab" title="Timer">
+                <i class="fas fa-stopwatch"></i>
+                <span>Timer</span>
+            </a>
+            <a href="khmer_calendar.html" class="sidebar-tab" title="Khmer Calendar">
+                <i class="fas fa-moon"></i>
+                <span>Khmer</span>
+            </a>
+            <a href="world_calendar.html" class="sidebar-tab" title="World Calendar">
+                <i class="fas fa-globe-americas"></i>
+                <span>World</span>
+            </a>
+            <a href="todo.html" class="sidebar-tab active" title="Todo List">
+                <i class="fas fa-book"></i>
+                <span>Todo</span>
+            </a>
+            
+        </nav>
+        <div class="sidebar-bottom">
+            <button class="sidebar-tab theme-toggle" title="Toggle Theme" onclick="toggleTheme()">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-wrapper">
+        <div class="timer-container">
+            <div class="page-header">
+                <h1><i class="fas fa-book"></i> Make your Todo list</h1>
+                <p>Make your plans and stay organized</p>
+            </div>
+            
+            <div class="timer-card">
+                  <div class="add-task-container">
+                    <label for="new-task-input"></label>
+                    <input type="text" id="new-task-input" placeholder="Enter a new task" aria-label="New Task">
+                    <select id="priority-select" aria-label="Priority">
+                        <option value="high">High🔴</option>
+                        <option value="medium">Medium🟠</option>
+                        <option value="low">Low🟢</option>
+                    </select>
+                    <button id="add-task-btn" aria-label="Add task">+</button>
+                </div>
+                <!-- Timer Mode Tabs -->
+                <div class="timer-tabs">
+                    <button class="timer-tab active" data-mode="all">All</button>
+                    <button class="timer-tab" data-mode="priority">Priority</button>
+                    <button class="timer-tab" data-mode="favourite">Favourite</button>
+                    <button class="timer-tab" data-mode="completed">Completed</button>
+                </div>
+                <!-- Task List Container: supports multiple tasks -->
+                <div id="tasks-list" style="margin-top:24px;"></div>
+    <script src="todo.js"></script>
+</body>
+</html>

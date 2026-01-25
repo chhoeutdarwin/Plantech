@@ -1,3 +1,103 @@
+/* === Improved Task Container === */
+.task-card {
+    background: var(--card-bg-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    min-height: 56px;
+    margin: 0 auto;
+    max-width: 480px;
+    border: 1px solid var(--border-color);
+    transition: box-shadow 0.2s;
+}
+.task-card:hover {
+    box-shadow: var(--shadow-hover);
+}
+.task-text {
+    flex: 1;
+    color: var(--text-color);
+    font-size: 1.1rem;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+    padding: 0 8px;
+    word-break: break-word;
+}
+.task-actions {
+    display: flex;
+    gap: 8px;
+}
+.task-action {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 50%;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.task-action i {
+    font-size: 1.3rem;
+    color: var(--accent-color);
+    transition: color 0.2s;
+}
+.task-action:hover {
+    background: var(--current-highlight);
+}
+.task-action:hover i.fa-trash {
+    color: var(--danger-color);
+}
+.task-action.favourited i.fa-heart {
+    color: var(--primary-color);
+}
+/* === TODO LIST === */
+.todo-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.todo-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 1.1rem;
+    transition: background 0.2s;
+}
+.todo-item:last-child { border-bottom: none; }
+.todo-priority {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 4px;
+}
+.priority-high { background: var(--danger-color); }
+.priority-medium { background: var(--warning-color); }
+.priority-low { background: var(--success-color); }
+.todo-text.completed {
+    text-decoration: line-through;
+    color: var(--accent-color);
+}
+.todo-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    color: var(--accent-color);
+    margin-left: 4px;
+    transition: color 0.2s;
+}
+.todo-btn.favourite { color: #f59e0b; font-size: 1.3rem; }
+.todo-btn.complete { color: var(--success-color); }
+.todo-btn.delete { color: var(--danger-color); }
+.todo-btn:hover { color: var(--primary-color); }
+.empty-state { font-size: 1.1rem; }
 /* Mobile Sidebar Toggle Button */
 .sidebar-toggle {
     display: none;
