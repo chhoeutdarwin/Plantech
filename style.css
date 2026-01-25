@@ -25,34 +25,70 @@
     padding: 0 8px;
     word-break: break-word;
 }
-.task-actions {
-    display: flex;
-    gap: 8px;
-}
-.task-action {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 6px;
-    border-radius: 50%;
-    transition: background 0.2s;
-    display: flex;
+.task-index {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    border-radius: 8px;
+    background: var(--bg-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-right: 10px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+}
+.task-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.task-action {
+    width: 40px;
+    height: 40px;
+    background: var(--card-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
 }
 .task-action i {
-    font-size: 1.3rem;
+    font-size: 1.1rem;
     color: var(--accent-color);
-    transition: color 0.2s;
+    transition: color 0.15s ease, transform 0.15s ease;
 }
 .task-action:hover {
+    transform: translateY(-3px);
     background: var(--current-highlight);
+    box-shadow: var(--shadow-hover);
 }
+.task-action:focus {
+    outline: 3px solid rgba(79,110,247,0.12);
+    outline-offset: 2px;
+}
+/* specific icon tweaks */
 .task-action:hover i.fa-trash {
     color: var(--danger-color);
 }
+.task-action.favourited {
+    background: linear-gradient(135deg, rgba(79,110,247,0.12), rgba(79,110,247,0.08));
+    border-color: rgba(79,110,247,0.14);
+}
 .task-action.favourited i.fa-heart {
     color: var(--primary-color);
+}
+.task-action.completed i.fa-check {
+    color: var(--success-color);
+}
+.task-action.delete i.fa-trash {
+    color: var(--danger-color);
 }
 /* === TODO LIST === */
 .todo-list {
