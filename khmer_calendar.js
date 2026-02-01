@@ -403,27 +403,41 @@ document.addEventListener('DOMContentLoaded', () => {
     init();
 });
 
-// === BULLETPROOF DARK/LIGHT MODE TOGGLE ===
-document.addEventListener('DOMContentLoaded', () => {
-    const darkModeToggle = document.getElementById('dark-mode-toggle');
-    let isDarkMode = localStorage.getItem('theme') === 'dark';
-    function updateTheme(theme) {
-        document.documentElement.setAttribute('data-theme', theme);
-        localStorage.setItem('theme', theme);
-        isDarkMode = theme === 'dark';
-        if (darkModeToggle) {
-            let icon = darkModeToggle.querySelector('i');
-            if (!icon) {
-                icon = document.createElement('i');
-                darkModeToggle.appendChild(icon);
+// === DARK/LIGHT MODE TOGGLE ===
+(function() {
+    // Apply theme immediately to prevent flash
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    document.body.setAttribute('data-theme', savedTheme);
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            document.body.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            
+            // Update icon
+            if (darkModeToggle) {
+                const icon = darkModeToggle.querySelector('i');
+                if (icon) {
+                    icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+                }
             }
-            icon.className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
         }
-    }
-    updateTheme(isDarkMode ? 'dark' : 'light');
-    if (darkModeToggle) {
-        darkModeToggle.addEventListener('click', () => {
-            updateTheme(isDarkMode ? 'light' : 'dark');
-        });
-    }
-});
+        
+        // Load saved theme
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        applyTheme(currentTheme);
+        
+        // Toggle on click
+        if (darkModeToggle) {
+            darkModeToggle.addEventListener('click', function() {
+                const current = localStorage.getItem('theme') || 'light';
+                const newTheme = current === 'dark' ? 'light' : 'dark';
+                applyTheme(newTheme);
+            });
+        }
+    });
+})();

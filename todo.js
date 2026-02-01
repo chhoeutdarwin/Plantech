@@ -61,82 +61,89 @@
             if (currentTab === 'priority') filtered = tasks.filter(t => t.priority === 'high');
 
             filtered.forEach((task, idx) => {
-                const card = document.createElement('div');
-                card.className = 'task-card';
-                card.style.display = 'flex';
-                card.style.justifyContent = 'space-between';
-                card.style.alignItems = 'center';
-                card.style.marginBottom = '12px';
+                    const card = document.createElement('div');
+                    card.className = 'task-card';
+                    card.style.display = 'flex';
+                    card.style.flexDirection = 'column';
+                    card.style.alignItems = 'flex-start';
+                    card.style.gap = '6px';
+                    card.style.marginBottom = '12px';
 
-                // Left
-                const left = document.createElement('div');
-                left.style.display = 'flex';
-                left.style.alignItems = 'center';
+                    // Top row: index + text
+                    const topRow = document.createElement('div');
+                    topRow.style.display = 'flex';
+                    topRow.style.alignItems = 'center';
+                    topRow.style.gap = '8px';
 
-                const indexEl = document.createElement('span');
-                indexEl.className = 'task-index';
-                // display saved-order index (1-based)
-                const savedIndex = tasks.indexOf(task);
-                indexEl.textContent = savedIndex >= 0 ? String(savedIndex + 1) : '';
+                    const indexEl = document.createElement('span');
+                    indexEl.className = 'task-index';
+                    // display saved-order index (1-based)
+                    const savedIndex = tasks.indexOf(task);
+                    indexEl.textContent = savedIndex >= 0 ? String(savedIndex + 1) : '';
 
-                const text = document.createElement('span');
-                text.textContent = task.text;
-                text.style.marginRight = '10px';
-                if (task.completed) {
-                    text.style.textDecoration = 'line-through';
-                    text.style.opacity = '0.6';
-                }
+                    const text = document.createElement('span');
+                    text.textContent = task.text;
+                    text.style.marginRight = '10px';
+                    if (task.completed) {
+                        text.style.textDecoration = 'line-through';
+                        text.style.opacity = '0.6';
+                    }
 
-                const prio = document.createElement('span');
-                prio.textContent =
-                    task.priority === 'high' ? '🔴' :
-                    task.priority === 'medium' ? '🟠' : '🟢';
+                    topRow.append(indexEl, text);
 
-                left.append(indexEl, text, prio);
+                    // Actions row: priority + buttons (placed below the text)
+                    const actions = document.createElement('div');
+                    actions.className = 'task-actions';
 
-                // Actions
-                const actions = document.createElement('div');
-                actions.className = 'task-actions';
+                    // priority badge (top-right)
+                    const badge = document.createElement('div');
+                    const pcls = task.priority === 'high' ? 'priority-high' : task.priority === 'medium' ? 'priority-medium' : 'priority-low';
+                    badge.className = `priority-badge ${pcls}`;
 
-                const favBtn = document.createElement('button');
-                favBtn.className = 'task-action';
-                favBtn.innerHTML = `<i class="fas fa-heart" aria-hidden="true"></i>`;
-                favBtn.setAttribute('aria-label', 'Favourite task');
-                favBtn.title = 'Favourite';
-                if (task.favourite) favBtn.classList.add('favourited');
-                favBtn.onclick = () => {
-                    task.favourite = !task.favourite;
-                    saveTasks();
-                    renderTasks();
-                };
+                    const buttons = document.createElement('div');
+                    buttons.className = 'task-buttons';
 
-                const doneBtn = document.createElement('button');
-                doneBtn.className = 'task-action';
-                if (task.completed) doneBtn.classList.add('completed');
-                doneBtn.innerHTML = `<i class="fas fa-check" aria-hidden="true"></i>`;
-                doneBtn.setAttribute('aria-label', 'Toggle complete');
-                doneBtn.title = 'Complete';
-                doneBtn.onclick = () => {
-                    task.completed = !task.completed;
-                    saveTasks();
-                    renderTasks();
-                };
+                    const favBtn = document.createElement('button');
+                    favBtn.className = 'task-action heart small';
+                    favBtn.innerHTML = `<i class="fas fa-heart" aria-hidden="true"></i>`;
+                    favBtn.setAttribute('aria-label', 'Favourite task');
+                    favBtn.title = 'Favourite';
+                    if (task.favourite) favBtn.classList.add('favourited');
+                    favBtn.onclick = () => {
+                        task.favourite = !task.favourite;
+                        saveTasks();
+                        renderTasks();
+                    };
 
-                const delBtn = document.createElement('button');
-                delBtn.className = 'task-action delete';
-                delBtn.innerHTML = `<i class="fas fa-trash" aria-hidden="true"></i>`;
-                delBtn.setAttribute('aria-label', 'Delete task');
-                delBtn.title = 'Delete';
-                delBtn.onclick = () => {
-                    tasks.splice(idx, 1);
-                    saveTasks();
-                    renderTasks();
-                };
+                    const doneBtn = document.createElement('button');
+                    doneBtn.className = 'task-action small';
+                    if (task.completed) doneBtn.classList.add('completed');
+                    doneBtn.innerHTML = `<i class="fas fa-check" aria-hidden="true"></i>`;
+                    doneBtn.setAttribute('aria-label', 'Toggle complete');
+                    doneBtn.title = 'Complete';
+                    doneBtn.onclick = () => {
+                        task.completed = !task.completed;
+                        saveTasks();
+                        renderTasks();
+                    };
 
-                actions.append(favBtn, doneBtn, delBtn);
+                    const delBtn = document.createElement('button');
+                    delBtn.className = 'task-action delete small';
+                    delBtn.innerHTML = `<i class="fas fa-trash" aria-hidden="true"></i>`;
+                    delBtn.setAttribute('aria-label', 'Delete task');
+                    delBtn.title = 'Delete';
+                    delBtn.onclick = () => {
+                        const realIndex = tasks.indexOf(task);
+                        if (realIndex > -1) tasks.splice(realIndex, 1);
+                        saveTasks();
+                        renderTasks();
+                    };
 
-                card.append(left, actions);
-                tasksList.appendChild(card);
+                    buttons.append(favBtn, doneBtn, delBtn);
+                    actions.append(buttons);
+
+                    card.append(badge, topRow, actions);
+                    tasksList.appendChild(card);
             });
         }
 
